@@ -16,7 +16,10 @@ function Email() {
     body: '',
   });
 
-  const handleClose = () => setShow(false);
+  const handleClose = () =>  {
+    setShow(false);
+    navigate("/");
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

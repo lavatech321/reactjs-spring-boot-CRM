@@ -52,8 +52,50 @@ const AddorEdit = ({ contactInfo, setContactInfo }) => {
 
   const createOrEditContact = (e) => {
     e.preventDefault();
-
-    const data = new FormData(); // Use FormData to handle file uploads and other data
+  
+    // Validation checks
+    if (!formData.name) {
+      alert('Name is required');
+      return;
+    }
+    if (!formData.phoneNo) {
+      alert('Phone number is required');
+      return;
+    }
+    if (!/^\d{10}$/.test(formData.phoneNo)) {
+      alert('Invalid phone number');
+      return;
+    }
+    if (!formData.email) {
+      alert('Email is required');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      alert('Email format is invalid');
+      return;
+    }
+    if (!formData.address) {
+      alert('Address is required');
+      return;
+    }
+    if (!formData.jobTitle) {
+      alert('Job title is required');
+      return;
+    }
+    if (!formData.companyName) {
+      alert('Company name is required');
+      return;
+    }
+    if (!formData.salary) {
+      alert('Salary is required');
+      return;
+    }
+    if (!/^\d+$/.test(formData.salary)) {
+      alert('Salary should contain only digits');
+      return;
+    }
+  
+    const data = new FormData();
     data.append('name', formData.name);
     data.append('phoneNo', formData.phoneNo);
     data.append('email', formData.email);
@@ -64,18 +106,15 @@ const AddorEdit = ({ contactInfo, setContactInfo }) => {
     if (formData.profilePicture) {
       data.append('profilePicture', formData.profilePicture);
     }
-
+  
     if (id) {
       PhonebookServices.updateContact(id, data)
         .then((response) => {
           setContactInfo((prevData) =>
-            prevData.map((x) =>
-              x.id === id ? { ...x, ...response.data } : x
-            )
+            prevData.map((x) => (x.id === id ? { ...x, ...response.data } : x))
           );
-          console.log('Updated Contact:', response.data);
           alert('Contact updated successfully');
-          navigate('/'); // Navigate back after updating
+          navigate('/');
         })
         .catch((err) => {
           console.error('Error updating contact:', err);
@@ -84,9 +123,8 @@ const AddorEdit = ({ contactInfo, setContactInfo }) => {
       PhonebookServices.createContact(data)
         .then((response) => {
           setContactInfo((prevData) => [...prevData, response.data]);
-          console.log('Created Contact:', response.data);
           alert('Contact created successfully');
-          navigate('/'); // Navigate back after creation
+          navigate('/');
         })
         .catch((err) => {
           console.error('Error creating contact:', err);
